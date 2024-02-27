@@ -1,0 +1,98 @@
+<html>
+  <head>
+    <title>Token Configurator</title>
+    <script type="module">
+      import {
+        SD_FUNCTIONS_PATH,
+        SD_CONFIG_PATH,
+      } from "@tokens-studio/configurator/utils";
+      import "@tokens-studio/configurator";
+      // important to take the FS from style-dictionary/fs, which is an in-memory file-system shim for browser-compatibility
+      import { fs } from "style-dictionary/fs";
+
+      // Creating some default files, customize as you like
+      await Promise.all([
+        fs.promises.writeFile(
+          "/tokens.json",
+          JSON.stringify(
+            {
+              colors: {
+                red: {
+                  value: "#ff0000",
+                  type: "color",
+                },
+              },
+            },
+            null,
+            2
+          ),
+          "utf-8"
+        ),
+        fs.promises.writeFile(
+          SD_CONFIG_PATH,
+          JSON.stringify(
+            {
+              source: ["**/*.json"],
+              platforms: {
+                css: {
+                  transformGroup: "tokens-studio",
+                  buildPath: "build/css/",
+                  files: [
+                    {
+                      destination: "variables.css",
+                      format: "css/variables",
+                    },
+                  ],
+                },
+              },
+            },
+            null,
+            2
+          ),
+          "utf-8"
+        ),
+        fs.promises.writeFile(
+          SD_FUNCTIONS_PATH,
+          `import StyleDictionary from 'style-dictionary';
+import { registerTransforms } from '@tokens-studio/sd-transforms';
+
+// sd-transforms, 2nd parameter for options can be added
+// See docs: https://github.com/tokens-studio/sd-transforms
+registerTransforms(StyleDictionary);\n`,
+          "utf-8"
+        ),
+      ]);
+
+      await document.querySelector("configurator-element").init();
+    </script>
+    <!-- you can replace light with dark if you want to use dark-mode -->
+    <link
+      rel="stylesheet"
+      href="./node_modules/@tokens-studio/tokens/dist/css/light.css"
+    />
+    <link
+      rel="stylesheet"
+      href="./node_modules/@tokens-studio/tokens/dist/css/core.css"
+    />
+    <style>
+      /* Use a nice sans-serif font like Inter, would be my suggestion */
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap");
+      html,
+      body {
+        font-family: Inter, sans-serif;
+        /* monaco has some stuff that overflows so probably wrap it in a container and set this to hidden */
+        /* in this example I do it on the body/html itself */
+        overflow-y: hidden;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <configurator-element prevent-init>
+      <div style="height: 100%" slot="monaco-config"></div>
+      <div style="height: 100%" slot="monaco-output"></div>
+    </configurator-element>
+  </body>
+</html>

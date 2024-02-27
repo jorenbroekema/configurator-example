@@ -1,0 +1,23 @@
+{
+  "name": "configurator-example",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "start": "wds --node-resolve --watch --open",
+    "build": "rollup -c rollup.config.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@tokens-studio/configurator": "^0.0.12"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@web/dev-server": "^0.4.3",
+    "@web/rollup-plugin-html": "^2.1.2",
+    "@web/rollup-plugin-import-meta-assets": "^2.2.1",
+    "rollup": "^4.12.0"
+  }
+}
